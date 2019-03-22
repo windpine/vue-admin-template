@@ -143,6 +143,22 @@ export const asyncRouterMap = [
       }
     ]
   },
+  {
+    path: '/datafile',
+    component: Layout,
+    redirect: '/datafile/index',
+    children: [
+      {
+        path: 'all',
+        component: () => import('@/views/datafile/index'),
+        name: 'DataFile',
+        meta: {
+          title: 'DataFile',
+          icon: 'data'
+        }
+      }
+    ]
+  },
 
   { path: '*', redirect: '/404', hidden: true }
 ]

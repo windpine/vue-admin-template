@@ -7,3 +7,10 @@ export function getList(params) {
     params
   })
 }
+
+export function getDataFileListAll() {
+  return request({
+    url: '/datafile/all',
+    method: 'get'
+  })
+}
