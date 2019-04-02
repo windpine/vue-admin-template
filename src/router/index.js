@@ -8,6 +8,7 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '../views/layout/Layout'
+import UserSpace from '../views/UserSpace/index'
 
 /**
 * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
@@ -36,6 +37,12 @@ export const constantRouterMap = [
       path: 'dashboard',
       component: () => import('@/views/dashboard/index')
     }]
+  },
+
+  {
+    path: '/userspace',
+    component: UserSpace,
+    hidden: true
   }
 ]
 
