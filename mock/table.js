@@ -13,27 +13,12 @@ export const exampleAPI = {
       }]
     })
     return {
-      code: 20000,
+      errorCode: {
+        value: 20000,
+        desc: '成功'
+      },
       data: items
     }
   }
 }
 
-export const dataFileAPI = {
-  list: () => {
-    const items = Mock.mock({
-      'items|30': [{
-        id: '@id',
-        commit: '@guid',
-        filename: '@sentence(10,30)',
-        uploader: 'name',
-        display_time: '@datetime',
-        size: '@integer(1,10000)' + 'Kb'
-      }]
-    })
-    return {
-      code: 20000,
-      data: items
-    }
-  }
-}

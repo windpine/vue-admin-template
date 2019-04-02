@@ -10,3 +10,10 @@ export function isvalidUsername(str) {
 export function isExternal(path) {
   return /^(https?:|mailto:|tel:)/.test(path)
 }
+
+export function isNull(str) {
+  if (str === '') return true
+  var regu = '^[ ]+$'
+  var re = new RegExp(regu)
+  return re.test(str)
+}

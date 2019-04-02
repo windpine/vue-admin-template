@@ -57,7 +57,7 @@ export const asyncRouterMap = [
         path: 'tree',
         name: 'Tree',
         component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree', roles: ['admin'] }
+        meta: { title: 'Tree', icon: 'tree', roles: ['ADMIN'] }
       }
     ]
   },
@@ -76,64 +76,6 @@ export const asyncRouterMap = [
   },
 
   {
-    path: '/nested',
-    component: Layout,
-    redirect: '/nested/menu1',
-    name: 'Nested',
-    meta: {
-      title: 'Nested',
-      icon: 'nested'
-    },
-    children: [
-      {
-        path: 'menu1',
-        component: () => import('@/views/nested/menu1/index'), // Parent router-view
-        name: 'Menu1',
-        meta: { title: 'Menu1' },
-        children: [
-          {
-            path: 'menu1-1',
-            component: () => import('@/views/nested/menu1/menu1-1'),
-            name: 'Menu1-1',
-            meta: { title: 'Menu1-1' }
-          },
-          {
-            path: 'menu1-2',
-            component: () => import('@/views/nested/menu1/menu1-2'),
-            name: 'Menu1-2',
-            meta: { title: 'Menu1-2' },
-            children: [
-              {
-                path: 'menu1-2-1',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
-                name: 'Menu1-2-1',
-                meta: { title: 'Menu1-2-1' }
-              },
-              {
-                path: 'menu1-2-2',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
-                name: 'Menu1-2-2',
-                meta: { title: 'Menu1-2-2' }
-              }
-            ]
-          },
-          {
-            path: 'menu1-3',
-            component: () => import('@/views/nested/menu1/menu1-3'),
-            name: 'Menu1-3',
-            meta: { title: 'Menu1-3' }
-          }
-        ]
-      },
-      {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        meta: { title: 'menu2' }
-      }
-    ]
-  },
-
-  {
     path: 'external-link',
     component: Layout,
     children: [
@@ -143,23 +85,85 @@ export const asyncRouterMap = [
       }
     ]
   },
+
   {
     path: '/datafile',
     component: Layout,
     redirect: '/datafile/index',
+    meta: {
+      title: 'DataFile',
+      icon: 'data'
+    },
     children: [
       {
-        path: 'all',
+        path: 'index',
         component: () => import('@/views/datafile/index'),
-        name: 'DataFile',
+        name: 'AllFile',
         meta: {
-          title: 'DataFile',
-          icon: 'data'
+          title: 'AllFile'
+        }
+      },
+      {
+        path: 'upload',
+        component: () => import('@/views/datafile/upload'),
+        name: 'UploadFile',
+        meta: {
+          title: 'UploadFile'
+        }
+      },
+      {
+        path: 'test',
+        component: () => import('@/views/datafile/test'),
+        name: 'Test',
+        meta: {
+          title: 'Test',
+          roles: ['ADMIN']
+        }
+      },
+      {
+        path: 'pdf',
+        component: () => import('@/views/datafile/pdffile'),
+        name: 'PdfFile',
+        meta: {
+          title: 'PdfFile'
+        },
+        hidden: true
+      }
+    ]
+  },
+  {
+    path: '/admin',
+    component: Layout,
+    redirect: '/admin/user',
+    name: 'AdminCenter',
+    meta: { title: 'AdminCenter', icon: 'example' , roles: ['ADMIN']},
+    children: [
+      {
+        path: 'user',
+        component: () => import('@/views/AdminCenter/user'),
+        name: 'UserCenter',
+        meta: {
+          title: 'UserCenter'
+        }
+      },
+      {
+        path: 'resource',
+        component: () => import('@/views/AdminCenter/resource'),
+        name: 'ResourceCenter',
+        meta: {
+          title: 'ResourceCenter'
+        }
+      },
+      {
+        path: 'role',
+        component: () => import('@/views/AdminCenter/role'),
+        name: 'RoleCenter',
+        meta: {
+          title: 'RoleCenter'
         }
       }
     ]
   },
-
   { path: '*', redirect: '/404', hidden: true }
 ]
 

@@ -13,6 +13,7 @@ import store from './store'
 import router from './router'
 
 import '@/icons' // icon
+import i18n from './lang' // Internationalization
 import '@/permission' // permission control
 
 /**
@@ -32,6 +33,7 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
+  i18n,
   store,
   render: h => h(App)
 })

@@ -1,16 +1,10 @@
 import request from '@/utils/request'
 
-export function getList(params) {
+export function getList(query) {
   return request({
     url: '/table/list',
     method: 'get',
-    params
+    params: query
   })
 }
 
-export function getDataFileListAll() {
-  return request({
-    url: '/datafile/all',
-    method: 'get'
-  })
-}

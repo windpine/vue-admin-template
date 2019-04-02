@@ -4,8 +4,9 @@ import { getToken, setToken, removeToken } from '@/utils/auth'
 const user = {
   state: {
     token: getToken(),
-    name: '',
+    username: '',
     avatar: '',
+    uid:'',
     roles: []
   },
 
@@ -13,11 +14,14 @@ const user = {
     SET_TOKEN: (state, token) => {
       state.token = token
     },
-    SET_NAME: (state, name) => {
-      state.name = name
+    SET_NAME: (state, username) => {
+      state.username = username
     },
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
+    },
+    SET_UID: (state, uid) => {
+      state.uid = uid
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
@@ -31,6 +35,7 @@ const user = {
       return new Promise((resolve, reject) => {
         login(username, userInfo.password).then(response => {
           const data = response.data
+          // TODO 存储TOKEN
           setToken(data.token)
           commit('SET_TOKEN', data.token)
           resolve()
@@ -50,8 +55,9 @@ const user = {
           } else {
             reject('getInfo: roles must be a non-null array !')
           }
-          commit('SET_NAME', data.name)
+          commit('SET_NAME', data.username)
           commit('SET_AVATAR', data.avatar)
+          commit('SET_UID', data.uid)
           resolve(response)
         }).catch(error => {
           reject(error)

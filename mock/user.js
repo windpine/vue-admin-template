@@ -11,16 +11,18 @@ const tokens = {
 
 const users = {
   'admin-token': {
-    roles: ['admin'],
+    roles: ['ADMIN'],
     introduction: 'I am a super administrator',
     avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
-    name: '薛定谔的狗'
+    username: '薛定谔的狗',
+    uid:1
   },
   'editor-token': {
-    roles: ['editor'],
+    roles: ['GUEST'],
     introduction: 'I am an editor',
     avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
-    name: '没有权限的狗'
+    username: '没有权限的狗',
+    uid:2
   }
 }
 
@@ -31,13 +33,18 @@ export default {
 
     if (data) {
       return {
-        code: 20000,
+        errorCode: {
+          value: 20000,
+          desc: '成功'
+        },
         data
       }
     }
     return {
-      code: 60204,
-      message: 'Account and password are incorrect.'
+      errorCode: {
+        value: 60204,
+        desc: 'Account and password are incorrect.'
+      }
     }
   },
   getInfo: res => {
@@ -46,18 +53,26 @@ export default {
 
     if (info) {
       return {
-        code: 20000,
+        errorCode: {
+          value: 20000,
+          desc: '成功'
+        },
         data: info
       }
     }
     return {
-      code: 50008,
-      message: 'Login failed, unable to get user details.'
+      errorCode: {
+        value: 50008,
+        desc: 'Login failed, unable to get user details.'
+      }
     }
   },
   logout: () => {
     return {
-      code: 20000,
+      errorCode: {
+        value: 20000,
+        desc: '成功'
+      },
       data: 'success'
     }
   }
