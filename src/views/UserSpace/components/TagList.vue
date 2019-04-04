@@ -1,7 +1,9 @@
 <template>
-  <div>
-    <label>{{ type }}</label>
-    <el-tag v-for="(item, index) in tagList" :key="index">{{ item }}</el-tag>
+  <div class="taglist">
+    <label style="padding-right: 5px">{{ type }}</label>
+    <el-radio-group v-for="(item,index) in tagList" :key="index" v-model="tagChoose" >
+      <el-radio-button :label="item"></el-radio-button>
+    </el-radio-group>
   </div>
 </template>
 
@@ -16,18 +18,24 @@ export default {
     tagList: {
       type: Array,
       default: () => {
-        return ['金融', '通信', '教育']
+        return ['不限', '金融', '通信', '教育']
       }
     }
   },
   data() {
     return {
-
+      tagChoose: ''
     }
   }
 }
 </script>
 
 <style scoped>
+  .taglist {
+    margin-bottom: 10px;
+  }
+  .el-radio-button {
+    padding-right: 10px;
+  }
 
 </style>

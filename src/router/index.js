@@ -9,6 +9,8 @@ Vue.use(Router)
 /* Layout */
 import Layout from '../views/layout/Layout'
 import UserSpace from '../views/UserSpace/index'
+import DataDetail from '../views/UserSpace/DataDetail'
+import FrontLayout from '../views/FrontPage/FrontLayout'
 
 /**
 * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
@@ -40,9 +42,23 @@ export const constantRouterMap = [
   },
 
   {
-    path: '/userspace',
-    component: UserSpace,
-    hidden: true
+    path: '/welcome',
+    component: FrontLayout,
+    redirect: '/welcome/userspace',
+    name: 'FrontLayout',
+    hidden: true,
+    children: [
+      {
+        path: 'userspace',
+        name: 'UserSpace',
+        component: UserSpace
+      },
+      {
+        path: 'datadetail',
+        name: 'DataDetail',
+        component: DataDetail
+      }
+    ]
   }
 ]
 
@@ -143,7 +159,7 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: '/admin/user',
     name: 'AdminCenter',
-    meta: { title: 'AdminCenter', icon: 'example' , roles: ['ADMIN']},
+    meta: { title: 'AdminCenter', icon: 'example', roles: ['ADMIN'] },
     children: [
       {
         path: 'user',
