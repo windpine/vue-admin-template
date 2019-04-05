@@ -11,15 +11,15 @@
           <el-col :span="12" style="margin-top: 50px">
             <em class="em1">
               <span class="sp1">
-                20万框监控场景下人体检测数据
+                {{ fileData.fileName }}
               </span>
               <p/>
               <span class="sp2">
-                20万框监控场景下人体检测数据。监控场景包括室内（商场、超市、地铁）和室外（街道），包含少数超密集场景。数据涵盖男性女性...
+                {{ fileData.description }}
               </span>
             </em>
             <div style="margin-top: 20px">
-              <el-button type="primary">下载数据</el-button>
+              <el-button type="primary"><a :href="downloadFileLink">下载数据</a></el-button>
               <el-button type="primary" @click="showUploadDialog">上传新版本数据</el-button>
             </div>
           </el-col>
@@ -45,29 +45,14 @@
           </el-col>
         </el-row>
         <div class="detail-tile">
-          <span>数据介绍</span>
-        </div>
-        <div class="data-description">
-          <p>test</p>
-        </div>
-        <div class="detail-tile">
           <span>数据规格</span>
         </div>
         <div class="data-detail">
           <el-table
-            :data="tableData"
+            :data="customAttributes"
             style="width: 100%">
-            <el-table-column
-              prop="date"
-              label="日期"
-              width="180"/>
-            <el-table-column
-              prop="name"
-              label="姓名"
-              width="180"/>
-            <el-table-column
-              prop="address"
-              label="地址"/>
+            <el-table-column prop="customAttributeKey" label="规格名"/>
+            <el-table-column prop="customAttributeValue" label="规格值" />
           </el-table>
         </div>
         <div style="min-height: 10px"/>
@@ -76,27 +61,31 @@
         </div>
         <div class="data-detail">
           <el-table
-            :data="tableData"
+            :data="versionFiles"
             style="width: 100%">
+            <el-table-column prop="commit" label="commit"/>
+            <el-table-column prop="uid" label="创建者" />
+            <el-table-column prop="createTime" label="创建时间"/>
+            <el-table-column prop="description" label="提交描述"/>
             <el-table-column
-              prop="date"
-              label="日期"
-              width="180"/>
-            <el-table-column
-              prop="name"
-              label="姓名"
-              width="180"/>
-            <el-table-column
-              prop="address"
-              label="地址"/>>
+              fixed="right"
+              label="操作"
+              width="100">
+              <template slot-scope="scope">
+                <el-button type="text" size="small"><a :href="downloadVersionFileLink(scope.row.commit)">下载</a></el-button>
+              </template>
+            </el-table-column>
           </el-table>
-          <pagination :total="100"></pagination>
+          <pagination :total="100"/>
         </div>
       </el-col>
       <el-col :span="2"><div style="min-height:1px;"/></el-col>
     </el-row>
     <el-dialog :visible.sync="uploadFileVisible" title="新版本文件上传">
-      <upload-file :type="'version'"/>
+      <upload-file
+        :type="'version'"
+        :parent-file-commit="fileData.commit"
+        :parent-data-type="fileData.dataType"/>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="closeUploadDialog">关闭</el-button>
       </span>
@@ -105,6 +94,7 @@
 </template>
 
 <script>
+import { getDataFileById, zipFiles, getAllVersionFile, downloadFile } from '@/api/file'
 import UploadFile from '../../views/datafile/upload'
 import Pagination from '../../components/Pagination/index'
 export default {
@@ -112,27 +102,40 @@ export default {
   components: { Pagination, UploadFile },
   data() {
     return {
-      tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }],
-      uploadFileVisible: false
+      uploadFileVisible: false,
+      fileQuery: {
+        fileId: this.$route.query.id
+      },
+      fileData: {},
+      customAttributes: [],
+      versionFiles: [],
+      downloadFileLink: ''
     }
   },
+  computed: {
+    downloadVersionFileLink() {
+      return function(commit) {
+        return this.downloadFileLink + '&commit=' + commit
+      }
+    }
+  },
+  created() {
+    this.fetchData()
+  },
   methods: {
+    fetchData() {
+      getDataFileById(this.fileQuery).then(response => {
+        this.fileData = response.data.dataFile
+        this.customAttributes = response.data.customAttributes
+        this.downloadFileLink = process.env.BASE_URL +
+          '/file/download?fileName=' +
+          this.fileData.fileName +
+          this.fileData.fileType
+      })
+      getAllVersionFile(this.fileQuery).then(response => {
+        this.versionFiles = response.data
+      })
+    },
     showUploadDialog() {
       this.uploadFileVisible = true
     },

@@ -8,6 +8,14 @@ export function getDataFileListAll(query) {
   })
 }
 
+export function getDataFileById(query) {
+  return request({
+    url: 'http://localhost:8080/file/datafile',
+    method: 'get',
+    params: query
+  })
+}
+
 export function getAllVersionFile(query) {
   return request({
     baseURL: '',

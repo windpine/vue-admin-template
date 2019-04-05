@@ -14,7 +14,7 @@
           :file-list="fileList"
           action="">
           <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-          <div slot="tip" class="el-upload__tip" style="color: #F56C6C">只能上传单一尚未存在的数据文件</div>
+          <div v-show="type.toString() === 'normal'" slot="tip" class="el-upload__tip" style="color: #F56C6C">只能上传单一尚未存在的数据文件</div>
         </el-upload>
       </el-form-item>
       <el-form-item
@@ -27,7 +27,7 @@
         <el-input :rows="2" v-model="item.value" type="textarea" placeholder="请输入文件简介" style="width: 500px"/>
       </el-form-item>
 
-      <el-form-item v-show=" fileList.length > 0 " :rules="formRules.dataType" prop="dataType">
+      <el-form-item v-show=" fileList.length > 0 && type.toString() === 'normal'" :rules="formRules.dataType" prop="dataType">
         <el-select v-model="form.dataType" placeholder="请选择数据类型">
           <el-option
             v-for="(item,index) in dataTypeOptions"
@@ -94,6 +94,11 @@ export default {
       type: String,
       required: false,
       default: ''
+    },
+    parentDataType: {
+      type: String,
+      required: true,
+      default: '文档'
     }
   },
   data() {
@@ -133,7 +138,8 @@ export default {
           value: '数据规模',
           label: '数据规模'
         }, {
-          value: '数据'
+          value: '采集设备',
+          lable: '采集设备'
         }]
       }, {
         label: '图像类型',
@@ -177,16 +183,16 @@ export default {
       }],
       dataTypeOptions: [
         {
-          value: 'photo',
+          value: '图像',
           label: '图像'
         }, {
-          value: 'audio',
+          value: '音频',
           label: '音频'
         }, {
-          value: 'video',
+          value: '视频',
           label: '视频'
         }, {
-          value: 'document',
+          value: '文档',
           label: '文档'
         }
       ]
@@ -210,6 +216,7 @@ export default {
       })
       // TODO 获取当前登陆的用户uid
       formData.append('uid', '2')
+      formData.append('dataType', this.form.dataType)
       // 如果是普通的多文件上传，则走/multiple接口
       if (this.type.toString() === 'normal') {
         this.$refs['form'].validate(valid => {
@@ -227,8 +234,9 @@ export default {
               // 如果是单一文件，则走/upload接口
               const file = this.fileList[0]
               formData.append('files', file)
+              console.log(formData.getAll('customValues'))
+              console.log(formData.getAll('customKeys'))
               uploadFile(formData).then(response => {
-                console.log(response)
                 this.handleResponseMessage(response)
               })
             }
@@ -239,6 +247,7 @@ export default {
         })
       } else if (this.type.toString() === 'version') {
         // 版本文件每次仅允许上传一个
+        this.dataType = this.parentDataType
         this.fileUploadLimit = 1
         this.$refs['form'].validate(valid => {
           console.log(valid)
@@ -285,6 +294,9 @@ export default {
         })
         this.form.descriptions.splice(0, this.form.descriptions.length)
         this.fileList.splice(0, this.fileList.length)
+        this.form.dataType = ''
+        this.form.attributeKeys.splice(0, this.form.attributeKeys.length)
+        this.form.attributeValues.splice(0, this.form.attributeValues.length)
       }
     },
     addAttribute() {

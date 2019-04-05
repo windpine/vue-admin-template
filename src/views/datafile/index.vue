@@ -106,12 +106,12 @@
       </span>
     </el-dialog>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="fetchData" />
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.size" @pagination="fetchData" />
   </div>
 </template>
 
 <script>
-import { getDataFileListAll, zipFiles, getAllVersionFile} from '@/api/file'
+import { getDataFileListAll, zipFiles, getAllVersionFile } from '@/api/file'
 import waves from '@/directive/waves' // Waves directive
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import UploadFile from '@/views/datafile/upload'
@@ -131,7 +131,7 @@ export default {
         tag: [],
         sort: [],
         page: 1,
-        limit: 10
+        size: 10
       },
       uploadType: '',
       uploaderOptions: [],

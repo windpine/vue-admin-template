@@ -10,47 +10,79 @@
       </div>
     </div>
     <el-row style="background-color: #ffffff">
-      <el-col :span="2"><div style="min-height:1px;"></div></el-col>
+      <el-col :span="2"><div style="min-height:1px;"/></el-col>
       <el-col :span="20">
-        <div style="min-height: 20px"></div>
-        <tag-list :type="'图像数据'" :tag-list="photoTagList"></tag-list>
-        <hr class="divide-line"/>
-        <tag-list :type="'语音数据'" :tag-list="audioTagList"></tag-list>
-        <hr class="divide-line"/>
-        <tag-list :type="'文本数据'" :tag-list="textTagList"></tag-list>
-        <div style="min-height: 10px"></div>
+        <div style="min-height: 20px"/>
+        <tag-list :type="'图像数据'" :tag-list="photoTagList"/>
+        <hr class="divide-line">
+        <tag-list :type="'音视频数据'" :tag-list="audioTagList"/>
+        <hr class="divide-line">
+        <tag-list :type="'文本数据'" :tag-list="textTagList"/>
+        <div style="min-height: 10px"/>
       </el-col>
-      <el-col :span="2"><div style="min-height:1px;"></div></el-col>
+      <el-col :span="2"><div style="min-height:1px;"/></el-col>
     </el-row>
     <!--TODO  排序等操作栏-->
     <el-row :gutter="20" style="background-color: #f4f4f4">
-      <el-col :span="2"><div style="min-height:1px;"></div></el-col>
+      <el-col :span="2"><div style="min-height:1px;"/></el-col>
       <el-col :span="20">
-        <div style="min-height: 20px"></div>
-        <card></card>
-        <card></card>
-        <card></card>
-        <pagination :total="100"></pagination>
+        <div style="min-height: 20px"/>
+        <card
+          v-for="(item, index) in dataList"
+          :key="index + '-card'"
+          :v-loading="listLoading"
+          :card-info="{
+            fileId: item.fileId,
+            fileName: item.fileName,
+            description: item.description
+        }"/>
+        <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.size" @pagination="fetchData" />
       </el-col>
-      <el-col :span="2"><div style="min-height:1px;"></div></el-col>
+      <el-col :span="2"><div style="min-height:1px;"/></el-col>
     </el-row>
   </div>
 </template>
 
 <script>
+import { getDataFileListAll } from '@/api/file'
 import Card from '@/components/Card/index'
 import TagList from './components/TagList'
-import Pagination from '../../components/Pagination/index';
+import Pagination from '../../components/Pagination/index'
 export default {
   name: 'UserSpace',
   components: { Pagination, Card, TagList },
   data() {
     return {
       dataList: [],
-      listQuery: [],
+      total: 0,
+      listQuery: {
+        filename: '',
+        tag: [],
+        sort: [],
+        page: 1,
+        limit: 10
+      },
       photoTagList: ['不限', '智能医疗', '试题合集', 'OCR', '安防'],
       audioTagList: ['不限', '智能客服', '智能手机', '智能家居'],
-      textTagList: ['不限', '机器翻译', '自然语言处理']
+      textTagList: ['不限', '机器翻译', '自然语言处理'],
+      listLoading: false
+    }
+  },
+  created() {
+    this.fetchData()
+  },
+  methods: {
+    fetchData() {
+      this.listLoading = true
+      getDataFileListAll(this.listQuery).then(response => {
+        // TODO 处理数据
+        this.dataList = response.data.content
+        console.dataList
+        // this.list = response.data
+        // this.total = response.total
+        this.total = response.data.totalElements
+        this.listLoading = false
+      })
     }
   }
 }

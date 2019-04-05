@@ -7,21 +7,21 @@
           <em class="em1">
             <span class="sp1">
               <a href="javascript:void(0);" onclick="alert('click')">
-                20万框监控场景下人体检测数据
+                {{ cardInfo.fileName }}
               </a>
             </span>
             <p/>
             <span class="sp2">
-              20万框监控场景下人体检测数据。监控场景包括室内（商场、超市、地铁）和室外（街道），包含少数超密集场景。数据涵盖男性女性...
+              {{ cardInfo.description }}
             </span>
-            <hr class="hr-style">
-            <span class="sp3">
+<!--            <hr class="hr-style">-->
+            <span class="sp3" style="display: none;">
               <label class="keyword">监控，人体，多场景，多时段</label>
             </span>
           </em>
         </el-col>
         <el-col :span="4">
-          <router-link :to="{path: jumpPath, query:{id: fileId}}">
+          <router-link :to="{path: jumpPath, query:{id: cardInfo.fileId}}">
             <el-button>
               查看详情
             </el-button>
@@ -36,9 +36,15 @@
 export default {
   name: 'Card',
   props: {
-    fileId: {
-      type: Number,
-      default: 1
+    cardInfo: {
+      type: Object,
+      default: () => {
+        return {
+          fileId: 1,
+          fileName: '',
+          description: ''
+        }
+      }
     }
   },
   data() {

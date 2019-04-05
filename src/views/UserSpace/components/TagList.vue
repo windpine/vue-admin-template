@@ -1,6 +1,6 @@
 <template>
   <div class="taglist">
-    <label style="padding-right: 5px">{{ type }}</label>
+    <label style="padding-right: 20px">{{ type }}</label>
     <el-radio-group v-for="(item,index) in tagList" :key="index" v-model="tagChoose" >
       <el-radio-button :label="item"></el-radio-button>
     </el-radio-group>
