@@ -14,7 +14,7 @@
             </el-dropdown-item>
           </router-link>
           <el-dropdown-item divided>
-            <span style="display:block;" >LogOut</span>
+            <span style="display:block;" @click="logout" >LogOut</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -42,7 +42,7 @@ export default {
   components: { UploadFile },
   data() {
     return {
-      uploadFileVisible: false,
+      uploadFileVisible: false
     }
   },
   computed: {
@@ -58,6 +58,11 @@ export default {
     closeUploadDialog() {
       this.uploadFileVisible = false
       // TODO 刷新当前页面
+    },
+    logout() {
+      this.$store.dispatch('LogOut').then(() => {
+        location.reload() // 为了重新实例化vue-router对象 避免bug
+      })
     }
   }
 }

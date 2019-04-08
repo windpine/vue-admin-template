@@ -7,6 +7,7 @@ const getters = {
   uid: state => state.user.uid,
   roles: state => state.user.roles,
   permission_routers: state => state.permission.routers,
-  addRouters: state => state.permission.addRouters
+  addRouters: state => state.permission.addRouters,
+  hasRouted: state => state.user.hasRouted
 }
 export default getters

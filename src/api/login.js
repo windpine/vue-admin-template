@@ -1,27 +1,26 @@
 import request from '@/utils/request'
 
-export function login(username, password) {
+export function login(formData) {
   return request({
-    url: '/user/login',
+    baseURL: '',
+    url: 'http://localhost:8080/auth/login',
     method: 'post',
-    data: {
-      username,
-      password
-    }
+    data: formData
   })
 }
 
-export function getInfo(token) {
+export function getInfo(username) {
   return request({
-    url: '/user/info',
+    baseURL: '',
+    url: 'http://localhost:8080/user/info',
     method: 'get',
-    params: { token }
+    params: { username: username }
   })
 }
 
 export function logout() {
   return request({
-    url: '/user/logout',
+    url: '/auth/logout',
     method: 'post'
   })
 }

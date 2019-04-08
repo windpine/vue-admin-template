@@ -25,6 +25,15 @@ export function getAllVersionFile(query) {
   })
 }
 
+export function getRelatedFile(query) {
+  return request({
+    baseURL: '',
+    url: 'http://localhost:8080/file/related',
+    method: 'get',
+    params: query
+  })
+}
+
 export function uploadFile(formData) {
   return request({
     baseURL: '',

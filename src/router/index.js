@@ -8,8 +8,8 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '../views/layout/Layout'
-import UserSpace from '../views/UserSpace/index'
-import DataDetail from '../views/UserSpace/DataDetail'
+import UserSpace from '../views/FrontPage/UserSpace/index'
+import DataDetail from '../views/FrontPage/UserSpace/DataDetail'
 import FrontLayout from '../views/FrontPage/FrontLayout'
 
 /**

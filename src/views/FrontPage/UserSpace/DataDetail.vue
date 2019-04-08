@@ -6,7 +6,7 @@
         <div style="height: 20px; "/>
         <el-row>
           <el-col :span="12">
-            <img src="../../assets/photo-card.jpg" height="90%" width="90%">
+            <img src="../../../assets/photo-card.jpg" height="90%" width="90%">
           </el-col>
           <el-col :span="12" style="margin-top: 50px">
             <em class="em1">
@@ -16,6 +16,10 @@
               <p/>
               <span class="sp2">
                 {{ fileData.description }}
+              </span>
+              <p/>
+              <span class="sp2" style="font-weight: bold">
+                由{{ uploader }}上传
               </span>
             </em>
             <div style="margin-top: 20px">
@@ -29,19 +33,21 @@
         </div>
         <el-row style="margin-bottom: 50px">
           <el-col
-            v-for="(item,index) in 4"
+            v-for="(item,index) in relatedFiles"
             :span="6"
             :key="index">
-            <a>
-              <img
-                src="../../assets/photo-card.jpg"
-                height="100%"
-                width="100%"
-                style="display: block;"
-                align="bottom"
-              >
-              <span style="padding-left: 120px">测试 {{ index + 1 }}</span>
-            </a>
+            <router-link :to="{path: jumpPath, query:{id: item.fileId}}">
+              <a>
+                <img
+                  src="../../../assets/photo-card.jpg"
+                  height="100%"
+                  width="100%"
+                  style="display: block;"
+                  align="bottom"
+                >
+                <span style="padding-left: 90px">{{ item.fileName }}</span>
+              </a>
+            </router-link>
           </el-col>
         </el-row>
         <div class="detail-tile">
@@ -94,22 +100,22 @@
 </template>
 
 <script>
-import { getDataFileById, zipFiles, getAllVersionFile, downloadFile } from '@/api/file'
-import UploadFile from '../../views/datafile/upload'
-import Pagination from '../../components/Pagination/index'
+import { getDataFileById, zipFiles, getAllVersionFile, getRelatedFile } from '@/api/file'
+import UploadFile from '../../datafile/upload'
+import Pagination from '../../../components/Pagination/index'
 export default {
   name: 'DataDetail',
   components: { Pagination, UploadFile },
   data() {
     return {
       uploadFileVisible: false,
-      fileQuery: {
-        fileId: this.$route.query.id
-      },
       fileData: {},
+      uploader: '',
       customAttributes: [],
       versionFiles: [],
-      downloadFileLink: ''
+      relatedFiles: [],
+      downloadFileLink: '',
+      jumpPath: '/welcome/datadetail'
     }
   },
   computed: {
@@ -117,22 +123,40 @@ export default {
       return function(commit) {
         return this.downloadFileLink + '&commit=' + commit
       }
+    },
+    fileId() {
+      return this.$route.query.id
     }
+  },
+  watch: {
+    // 如果路由有变化，会再次执行该方法
+    '$route': 'fetchData'
   },
   created() {
     this.fetchData()
   },
   methods: {
     fetchData() {
-      getDataFileById(this.fileQuery).then(response => {
+      const fileQuery = {
+        fileId: this.fileId
+      }
+      console.log(fileQuery)
+      getDataFileById(fileQuery).then(response => {
+        console.log(response)
         this.fileData = response.data.dataFile
+        this.uploader = response.data.uploader
         this.customAttributes = response.data.customAttributes
         this.downloadFileLink = process.env.BASE_URL +
           '/file/download?fileName=' +
           this.fileData.fileName +
           this.fileData.fileType
+        getRelatedFile({ fileName: this.fileData.fileName }).then(response => {
+          console.log(response)
+          this.relatedFiles = response.data
+        })
       })
-      getAllVersionFile(this.fileQuery).then(response => {
+      getAllVersionFile(fileQuery).then(response => {
+        console.log(response)
         this.versionFiles = response.data
       })
     },
@@ -165,8 +189,8 @@ export default {
     margin-left: 67px;
   }
   .sp1{
-    font-weight: bold;
-    font-size: 14pt;
+    font-weight: bolder;
+    font-size: 16pt;
     font-style: normal;
   }
   .sp2 {

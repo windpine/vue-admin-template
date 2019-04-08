@@ -5,7 +5,7 @@
       <div class="banner__inner">
         <!-- 这个div设置为和img图片同样的宽高，并且用absolute定位设置为居中 -->
         <div class="banner-img__wrapper">
-          <img src="../../assets/banner.jpg">
+          <img src="../../../assets/banner.jpg">
         </div>
       </div>
     </div>
@@ -13,11 +13,13 @@
       <el-col :span="2"><div style="min-height:1px;"/></el-col>
       <el-col :span="20">
         <div style="min-height: 20px"/>
-        <tag-list :type="'图像数据'" :tag-list="photoTagList"/>
-        <hr class="divide-line">
-        <tag-list :type="'音视频数据'" :tag-list="audioTagList"/>
-        <hr class="divide-line">
-        <tag-list :type="'文本数据'" :tag-list="textTagList"/>
+        <el-tabs v-model="listQuery.activeTag" @tab-click="handleTagClick">
+          <el-tab-pane label="不限" name="none"/>
+          <el-tab-pane label="图像数据" name="photo"/>
+          <el-tab-pane label="音视频数据" name="audio"/>
+          <el-tab-pane label="视频数据" name="video"/>
+          <el-tab-pane label="文档数据" name="document"/>
+        </el-tabs>
         <div style="min-height: 10px"/>
       </el-col>
       <el-col :span="2"><div style="min-height:1px;"/></el-col>
@@ -47,7 +49,7 @@
 import { getDataFileListAll } from '@/api/file'
 import Card from '@/components/Card/index'
 import TagList from './components/TagList'
-import Pagination from '../../components/Pagination/index'
+import Pagination from '../../../components/Pagination/index'
 export default {
   name: 'UserSpace',
   components: { Pagination, Card, TagList },
@@ -60,7 +62,8 @@ export default {
         tag: [],
         sort: [],
         page: 1,
-        limit: 10
+        limit: 10,
+        activeTag: 'none'
       },
       photoTagList: ['不限', '智能医疗', '试题合集', 'OCR', '安防'],
       audioTagList: ['不限', '智能客服', '智能手机', '智能家居'],
@@ -83,6 +86,9 @@ export default {
         this.total = response.data.totalElements
         this.listLoading = false
       })
+    },
+    handleTagClick() {
+      this.fetchData()
     }
   }
 }

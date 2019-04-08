@@ -82,6 +82,7 @@
 import { uploadFile, uploadMultiFiles, uploadVersionFile } from '@/api/file'
 import { Message } from 'element-ui'
 import { isNull } from '@/utils/validate'
+import store from '@/store'
 export default {
   name: 'UploadFile',
   props: {
@@ -183,16 +184,16 @@ export default {
       }],
       dataTypeOptions: [
         {
-          value: '图像',
+          value: 'photo',
           label: '图像'
         }, {
-          value: '音频',
+          value: 'audio',
           label: '音频'
         }, {
-          value: '视频',
+          value: 'video',
           label: '视频'
         }, {
-          value: '文档',
+          value: 'document',
           label: '文档'
         }
       ]
@@ -215,7 +216,7 @@ export default {
         formData.append('customValues', item.value)
       })
       // TODO 获取当前登陆的用户uid
-      formData.append('uid', '2')
+      formData.append('uid', store.getters.uid)
       formData.append('dataType', this.form.dataType)
       // 如果是普通的多文件上传，则走/multiple接口
       if (this.type.toString() === 'normal') {
